@@ -16,26 +16,18 @@ class Calendar:
         self.locator = locator
 
     def select_date(self, date: Tuple[str, str, str]):
-        # Переписать например такое Selenium решение на Selene - посмотреть насколько проще итоговый код
-        self.wait.until(
-            EC.visibility_of_element_located((By.XPATH, "//*[contains(text(), 'Level up your automation')]")))
-        ## Находим и кликаем по кнопке закрытия (крестику) модального окна
-        close_banner_btn = self.wait.until(
-            EC.element_to_be_clickable((By.XPATH, """//*[@id="fixedban"]/div/div/button""")))
-        close_banner_btn.click()
-        ## Ожидаем, пока баннер полностью исчезнет, чтобы он не перекрывал элементы формы
-        self.wait.until(EC.invisibility_of_element(close_banner_btn))
+        day, month, year = date
 
         self.wait.until(EC.element_to_be_clickable(self.locator)).click()
 
         month_element = self.wait.until(EC.element_to_be_clickable(self.MONTH_OF_BIRTH_SELECT))
-        Select(month_element).select_by_visible_text(date[0])
+        Select(month_element).select_by_visible_text(month)
 
         year_element = self.wait.until(EC.element_to_be_clickable(self.YEAR_OF_BIRTH_SELECT))
-        Select(year_element).select_by_visible_text(date[1])
+        Select(year_element).select_by_visible_text(year)
 
         day_locator = (
-            By.CSS_SELECTOR, f".react-datepicker__day--{date[2].zfill(3)}:not(.react-datepicker__day--outside-month)")
+            By.CSS_SELECTOR, f".react-datepicker__day--{day.zfill(3)}:not(.react-datepicker__day--outside-month)")
 
         self.wait.until(EC.element_to_be_clickable(day_locator)).click()
 
