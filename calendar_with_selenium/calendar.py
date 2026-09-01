@@ -1,3 +1,5 @@
+from typing import Tuple
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.wait import WebDriverWait
@@ -13,7 +15,7 @@ class Calendar:
         self.driver = driver
         self.locator = locator
 
-    def select_date(self, day: str, month: str, year: str):
+    def select_date(self, date: Tuple[str, str, str]):
         # Переписать например такое Selenium решение на Selene - посмотреть насколько проще итоговый код
         self.wait.until(
             EC.visibility_of_element_located((By.XPATH, "//*[contains(text(), 'Level up your automation')]")))
@@ -27,13 +29,13 @@ class Calendar:
         self.wait.until(EC.element_to_be_clickable(self.locator)).click()
 
         month_element = self.wait.until(EC.element_to_be_clickable(self.MONTH_OF_BIRTH_SELECT))
-        Select(month_element).select_by_visible_text(month)
+        Select(month_element).select_by_visible_text(date[0])
 
         year_element = self.wait.until(EC.element_to_be_clickable(self.YEAR_OF_BIRTH_SELECT))
-        Select(year_element).select_by_visible_text(year)
+        Select(year_element).select_by_visible_text(date[1])
 
         day_locator = (
-            By.CSS_SELECTOR, f".react-datepicker__day--{day.zfill(3)}:not(.react-datepicker__day--outside-month)")
+            By.CSS_SELECTOR, f".react-datepicker__day--{date[2].zfill(3)}:not(.react-datepicker__day--outside-month)")
 
         self.wait.until(EC.element_to_be_clickable(day_locator)).click()
 
